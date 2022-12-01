@@ -1,0 +1,15 @@
+<!doctype html>
+
+<title>LIVE SPORTS SCORES</title>
+<h1>LIVE SPORTS SCORES</h1>
+
+<form action="/" method="post">
+    <button name="footballScores" type="submit">FOOTBALL SCORES</button>
+    <button name="cricketScores" type="submit">CRICKET SCORES</button>
+</form>
+
+{% for game in games %}
+    <h2>{{ game.team1.name }} vs {{ game.team2.name }}</h2>
+    <h3>{{ game.team1.score }}  --   {{ game.team2.score }}</h3>
+    <hr/>
+{% endfor %}
