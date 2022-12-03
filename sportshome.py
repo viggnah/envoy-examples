@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 from games import Team, Game
 import random
+import os
 
 app = Flask(__name__)
 
@@ -11,7 +12,7 @@ def hello_world():
         games = get_cricket_scores()
     elif "footballScores" in request.form:
         games = get_football_scores()
-    return render_template("scores.jinja", games=games)
+    return render_template("scores.jinja", games=games, ip=os.environ.get("POD_IP"))
 
 def get_cricket_scores():
     teams = ["Sri Lanka", "Australia", "England", "India"]

@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+
+kind: Deployment
+
+metadata:
+  name: livescores-deployment
+  labels:
+    app: livescores
+
+spec:
+  replicas: 2
+
+  selector:
+    matchLabels:
+      app: livescores
+
+  template:
+    metadata:
+      labels:
+        app: livescores
+
+    # The imp stuff
+    spec:
+      containers:
+      - name: livescores
+        image: livescores:latest
+        ports:
+        - containerPort: 5000
+          name: flask-port
+        
+        imagePullPolicy: Never
+        
+        env:
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+
+---
+apiVersion: v1
+
+kind: Service
+
+metadata:
+  name: livescores-service
+
+spec:
+  type: LoadBalancer
+
+  selector:
+    app: livescores
+
+  ports:
+  - name: livescores-svc-port
+    protocol: TCP
+    port: 80
+    targetPort: flask-port
