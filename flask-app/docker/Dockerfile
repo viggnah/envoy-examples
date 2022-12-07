@@ -8,6 +8,6 @@ RUN pip3 install -r requirements.txt
 
 COPY . /livescores
 
-EXPOSE 5000
+EXPOSE 5200
 
-CMD [ "flask", "--app", "sportshome.py", "run", "--host=0.0.0.0" ]
+CMD [ "flask", "--app", "sportshome.py", "--debug", "run", "--host=0.0.0.0", "--port=5200"]

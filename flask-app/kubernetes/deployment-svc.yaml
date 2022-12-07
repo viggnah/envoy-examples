@@ -25,7 +25,7 @@ spec:
       - name: livescores
         image: livescores:latest
         ports:
-        - containerPort: 5000
+        - containerPort: 5200
           name: flask-port
         
         imagePullPolicy: Never
@@ -45,7 +45,7 @@ metadata:
   name: livescores-service
 
 spec:
-  type: LoadBalancer
+  type: ClusterIP
 
   selector:
     app: livescores
@@ -53,5 +53,5 @@ spec:
   ports:
   - name: livescores-svc-port
     protocol: TCP
-    port: 80
+    port: 4200
     targetPort: flask-port

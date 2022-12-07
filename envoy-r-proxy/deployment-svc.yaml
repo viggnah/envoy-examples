@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+
+kind: Deployment
+
+metadata:
+  name: envoyrproxy-deployment
+  labels:
+    app: envoyrproxy
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: envoyrproxy
+
+  template:
+    metadata:
+      labels:
+        app: envoyrproxy
+
+    # The imp stuff
+    spec:
+      containers:
+      - name: envoyrproxy
+        image: envoyrproxy:latest
+        ports:
+        - containerPort: 3200
+          name: envoy-port
+        
+        imagePullPolicy: Never
+---
+apiVersion: v1
+
+kind: Service
+
+metadata:
+  name: envoyrproxy-service
+
+spec:
+  type: LoadBalancer
+
+  selector:
+    app: envoyrproxy
+
+  ports:
+  - name: envoyrproxy-svc-port
+    protocol: TCP
+    port: 80
+    targetPort: envoy-port

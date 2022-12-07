@@ -53,3 +53,6 @@ def get_football_scores():
         games.append(Game(team1, team2))
     
     return games
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=5200)

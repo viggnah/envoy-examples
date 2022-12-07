@@ -4,8 +4,8 @@ static_resources:
 
     address:
       socket_address:
-        address: 127.0.0.1
-        port_value: 80
+        address: 0.0.0.0
+        port_value: 3200
 
     filter_chains:
     - filters:
@@ -25,7 +25,8 @@ static_resources:
             virtual_hosts:
             # name used when emitting stats, not imp for routing itself
             - name: lss_virtual_host
-              domains: ["*"]
+              domains: 
+              - "*"
               routes:
               - name:
                 match:
@@ -35,7 +36,8 @@ static_resources:
 
   clusters:
   - name: lss_service
-    type: STATIC
+    type: STRICT_DNS
+    lb_policy: ROUND_ROBIN
     load_assignment:
       cluster_name: lss_service
       endpoints:
@@ -43,5 +45,5 @@ static_resources:
         - endpoint:
             address:
               socket_address:
-                address: 127.0.0.1
-                port_value: 5000
+                address: livescores-service
+                port_value: 4200
