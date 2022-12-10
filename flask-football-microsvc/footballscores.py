@@ -3,7 +3,7 @@ import random
 
 app = Flask(__name__)
 
-@app.route("/get-football-scores", methods=['GET'])
+@app.route("/get_football_scores", methods=['GET'])
 def get_football_scores():
     teams = ["Argentina", "Australia", "England", "Brazil"]
     scores = ["0", "1", "2", "3", "4"] 
