@@ -45,5 +45,5 @@ static_resources:
         - endpoint:
             address:
               socket_address:
-                address: livescores-service
+                address: livescores-microsvc-svc
                 port_value: 4200

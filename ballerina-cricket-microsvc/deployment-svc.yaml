@@ -3,30 +3,30 @@ apiVersion: apps/v1
 kind: Deployment
 
 metadata:
-  name: livescores-microsvc-deployment
+  name: cricketscores-deployment
   labels:
-    app: livescores-microsvc
+    app: cricketscores
 
 spec:
-  replicas: 2
+  replicas: 1
 
   selector:
     matchLabels:
-      app: livescores-microsvc
+      app: cricketscores
 
   template:
     metadata:
       labels:
-        app: livescores-microsvc
+        app: cricketscores
 
     # The imp stuff
     spec:
       containers:
-      - name: livescores-microsvc
-        image: livescores-microsvc:latest
+      - name: cricketscores
+        image: cricketscores:latest
         ports:
-        - containerPort: 5200
-          name: flask-port
+        - containerPort: 7200
+          name: bal-port
         
         imagePullPolicy: Never
         
@@ -42,16 +42,16 @@ apiVersion: v1
 kind: Service
 
 metadata:
-  name: livescores-microsvc-svc
+  name: cricketscores-service
 
 spec:
   type: ClusterIP
 
   selector:
-    app: livescores-microsvc
+    app: cricketscores
 
   ports:
-  - name: livescores-microsvc-svc-port
+  - name: cricketscores-svc-port
     protocol: TCP
-    port: 4200
-    targetPort: flask-port
+    port: 7200
+    targetPort: bal-port

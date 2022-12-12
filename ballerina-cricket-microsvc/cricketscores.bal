@@ -1,7 +1,7 @@
 import ballerina/random;
 import ballerina/http;
 
-configurable int port = ?;
+configurable int port = 7200;
 
 service / on new http:Listener(port) {
 

@@ -5,8 +5,8 @@ import requests
 
 app = Flask(__name__)
 
-FOOTBALL_SCORES_URL = "http://localhost:6200/get_football_scores"
-CRICKET_SCORES_URL = "http://localhost:7200/get_cricket_scores"
+FOOTBALL_SCORES_URL = "http://footballscores-service:6200/get_football_scores"
+CRICKET_SCORES_URL = "http://cricketscores-service:7200/get_cricket_scores"
 
 @app.route("/", methods=['GET', 'POST'])
 def live_sports_scores():

@@ -53,5 +53,5 @@ spec:
   ports:
   - name: footballscores-svc-port
     protocol: TCP
-    port: 6201
+    port: 6200
     targetPort: flask-port
