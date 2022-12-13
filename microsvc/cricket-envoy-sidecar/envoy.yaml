@@ -1,11 +1,12 @@
 static_resources:
   listeners:
-  - name: edge_listener
+  # ingress
+  - name: cricket_sidecar_listener
 
     address:
       socket_address:
         address: 0.0.0.0
-        port_value: 3200
+        port_value: 7199
 
     filter_chains:
     - filters:
@@ -13,7 +14,7 @@ static_resources:
         typed_config:
           "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
           # used when emitting stats
-          stat_prefix: edge_hcm_filter
+          stat_prefix: cricket_sidecar_hcm_filter
           
           http_filters:
           - name: envoy.filters.http.router
@@ -21,10 +22,10 @@ static_resources:
               "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
           
           route_config:
-            name: edge_http_route_config
+            name: cricket_sidecar_http_route_config
             virtual_hosts:
             # name used when emitting stats, not imp for routing itself
-            - name: edge_virtual_host
+            - name: cricket_sidecar_virtual_host
               domains: 
               - "*"
               routes:
@@ -32,18 +33,18 @@ static_resources:
                 match:
                   prefix: "/"
                 route:
-                  cluster: lss_sidecar_envoy
+                  cluster: cricket_service
 
   clusters:
-  - name: lss_sidecar_envoy
+  - name: cricket_service
     type: STRICT_DNS
     lb_policy: ROUND_ROBIN
     load_assignment:
-      cluster_name: lss_sidecar_envoy
+      cluster_name: cricket_service
       endpoints:
       - lb_endpoints:
         - endpoint:
             address:
               socket_address:
-                address: mainapp-envoy-sidecar-svc
-                port_value: 5199
+                address: 127.0.0.1
+                port_value: 7200

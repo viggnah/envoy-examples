@@ -3,38 +3,35 @@ apiVersion: apps/v1
 kind: Deployment
 
 metadata:
-  name: footballscores-deployment
+  name: football-envoy-sidecar-deployment
   labels:
-    app: footballscores
+    app: football-envoy-sidecar
 
 spec:
-  replicas: 2
+  replicas: 1
 
   selector:
     matchLabels:
-      app: footballscores
+      app: football-envoy-sidecar
 
   template:
     metadata:
       labels:
-        app: footballscores
+        app: football-envoy-sidecar
 
     # The imp stuff
     spec:
       containers:
+      - name: football-envoy-sidecar
+        image: football-envoy-sidecar:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 6199
+          name: envoy-port
+
       - name: footballscores
         image: footballscores:latest
-        ports:
-        - containerPort: 6200
-          name: flask-port
-        
         imagePullPolicy: Never
-        
-        env:
-        - name: POD_IP
-          valueFrom:
-            fieldRef:
-              fieldPath: status.podIP
 
 ---
 apiVersion: v1
@@ -42,16 +39,16 @@ apiVersion: v1
 kind: Service
 
 metadata:
-  name: footballscores-service
+  name: football-envoy-sidecar-svc
 
 spec:
   type: ClusterIP
 
   selector:
-    app: footballscores
+    app: football-envoy-sidecar
 
   ports:
-  - name: footballscores-svc-port
+  - name: football-envoy-sidecar-svc-port
     protocol: TCP
-    port: 6200
-    targetPort: flask-port
+    port: 6199
+    targetPort: envoy-port

@@ -3,38 +3,35 @@ apiVersion: apps/v1
 kind: Deployment
 
 metadata:
-  name: cricketscores-deployment
+  name: cricket-envoy-sidecar-deployment
   labels:
-    app: cricketscores
+    app: cricket-envoy-sidecar
 
 spec:
   replicas: 1
 
   selector:
     matchLabels:
-      app: cricketscores
+      app: cricket-envoy-sidecar
 
   template:
     metadata:
       labels:
-        app: cricketscores
+        app: cricket-envoy-sidecar
 
     # The imp stuff
     spec:
       containers:
+      - name: cricket-envoy-sidecar
+        image: cricket-envoy-sidecar:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 7199
+          name: envoy-port
+
       - name: cricketscores
         image: cricketscores:latest
-        ports:
-        - containerPort: 7200
-          name: bal-port
-        
         imagePullPolicy: Never
-        
-        env:
-        - name: POD_IP
-          valueFrom:
-            fieldRef:
-              fieldPath: status.podIP
 
 ---
 apiVersion: v1
@@ -42,16 +39,16 @@ apiVersion: v1
 kind: Service
 
 metadata:
-  name: cricketscores-service
+  name: cricket-envoy-sidecar-svc
 
 spec:
   type: ClusterIP
 
   selector:
-    app: cricketscores
+    app: cricket-envoy-sidecar
 
   ports:
-  - name: cricketscores-svc-port
+  - name: cricket-envoy-sidecar-svc-port
     protocol: TCP
-    port: 7200
-    targetPort: bal-port
+    port: 7199
+    targetPort: envoy-port

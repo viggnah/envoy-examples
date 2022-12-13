@@ -3,38 +3,40 @@ apiVersion: apps/v1
 kind: Deployment
 
 metadata:
-  name: livescores-microsvc-deployment
+  name: mainapp-envoy-sidecar-deployment
   labels:
-    app: livescores-microsvc
+    app: mainapp-envoy-sidecar
 
 spec:
   replicas: 2
 
   selector:
     matchLabels:
-      app: livescores-microsvc
+      app: mainapp-envoy-sidecar
 
   template:
     metadata:
       labels:
-        app: livescores-microsvc
+        app: mainapp-envoy-sidecar
 
     # The imp stuff
     spec:
       containers:
+      - name: mainapp-envoy-sidecar
+        image: mainapp-envoy-sidecar:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 5199
+          name: envoy-port
+        
       - name: livescores-microsvc
         image: livescores-microsvc:latest
-        ports:
-        - containerPort: 5200
-          name: flask-port
-        
         imagePullPolicy: Never
-        
         env:
-        - name: POD_IP
-          valueFrom:
-            fieldRef:
-              fieldPath: status.podIP
+        - name: FOOTBALL_SCORES_URL
+          value: "http://football-envoy-sidecar-svc:6199/get_football_scores"
+        - name: CRICKET_SCORES_URL
+          value: "http://cricket-envoy-sidecar-svc:7199/get_cricket_scores"
 
 ---
 apiVersion: v1
@@ -42,16 +44,16 @@ apiVersion: v1
 kind: Service
 
 metadata:
-  name: livescores-microsvc-svc
+  name: mainapp-envoy-sidecar-svc
 
 spec:
   type: ClusterIP
 
   selector:
-    app: livescores-microsvc
+    app: mainapp-envoy-sidecar
 
   ports:
-  - name: livescores-microsvc-svc-port
+  - name: mainapp-envoy-sidecar-svc-port
     protocol: TCP
-    port: 4200
-    targetPort: flask-port
+    port: 5199
+    targetPort: envoy-port
