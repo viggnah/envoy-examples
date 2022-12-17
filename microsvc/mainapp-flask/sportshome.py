@@ -15,7 +15,7 @@ def live_sports_scores():
         games = get_cricket_scores()
     elif "footballScores" in request.form:
         games = get_football_scores()
-    return render_template("scores.jinja", games=games, ip=os.environ.get("POD_IP"))
+    return render_template("scores.jinja", games=games)
 
 def get_cricket_scores():
     json_resp = requests.get(CRICKET_SCORES_URL).json()

@@ -8,7 +8,7 @@ metadata:
     app: mainapp-envoy-sidecar
 
 spec:
-  replicas: 2
+  replicas: 1
 
   selector:
     matchLabels:
